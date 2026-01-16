@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: insurance-portal
+  profiles:
+    default: dev
+api:
+  version: 1.0

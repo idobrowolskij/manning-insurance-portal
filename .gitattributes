@@ -1,0 +1,59 @@
+/mvnw text eol=lf
+*.cmd text eol=crlf
+
+#################################
+# Default: Text files normalize LF
+#################################
+* text=auto eol=lf
+
+#################################
+# Java / Spring
+#################################
+*.java          text diff=java
+*.properties    text
+*.yml           text
+*.yaml          text
+*.xml           text
+*.sql           text
+
+#################################
+# Frontend (Angular / Web)
+#################################
+*.ts            text
+*.js            text
+*.html          text
+*.css           text
+*.scss          text
+*.json          text
+*.md            text
+
+#################################
+# Shell scripts (Docker, CI)
+#################################
+*.sh            text eol=lf
+
+#################################
+# Docker
+#################################
+Dockerfile      text
+*.dockerfile    text
+
+#################################
+# Ignore diff for generated files
+#################################
+**/target/**        -diff
+**/build/**         -diff
+**/dist/**          -diff
+**/node_modules/** -diff
+
+#################################
+# Binary files
+#################################
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+*.zip  binary
+*.jar  binary
