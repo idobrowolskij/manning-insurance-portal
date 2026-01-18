@@ -1,6 +1,5 @@
 package de.id.insuranceportal.entity;
 
-import de.id.insuranceportal.jpa.listener.UuidListener;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,24 +11,24 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @Entity
-@EntityListeners(UuidListener.class)
 @Table(name = "addresses")
 public class Address extends UuidEntity {
 
     @Id
-    @Column(name = "address_id", nullable = false, updatable = false)
+    @Column(name = "address_id", nullable = false, updatable = false, insertable = false)
+    @GeneratedValue
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "country_id", insertable = false, updatable = false)
+    @JoinColumn(name = "country_id", nullable = false)
     private Country country;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "city_id", insertable = false, updatable = false)
+    @JoinColumn(name = "city_id", nullable = false)
     private City city;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "state_id", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "state_id")
     private State state;
 
     @Column(name = "address", nullable = false, length = 128)

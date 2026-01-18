@@ -1,6 +1,5 @@
 package de.id.insuranceportal.entity;
 
-import de.id.insuranceportal.jpa.listener.UuidListener;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,12 +11,12 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @Entity
-@EntityListeners(UuidListener.class)
 @Table(name = "countries")
 public class Country extends UuidEntity {
 
     @Id
-    @Column(name = "country_id", nullable = false, updatable = false)
+    @Column(name = "country_id", nullable = false, updatable = false, insertable = false)
+    @GeneratedValue
     private UUID id;
 
     @Column(name = "name", nullable = false, length = 64)

@@ -1,58 +1,57 @@
 package de.id.insuranceportal.service;
 
+import de.id.insuranceportal.dto.customer.CustomerCreation;
+import de.id.insuranceportal.dto.customer.CustomerUpdate;
+import de.id.insuranceportal.dto.customer.CustomerView;
+import de.id.insuranceportal.dto.mapper.CustomerMapper;
+import de.id.insuranceportal.dto.mapper.RefResolver;
 import de.id.insuranceportal.entity.Customer;
 import de.id.insuranceportal.repository.CustomerRepository;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class CustomerService implements CrudService<Customer> {
+public class CustomerService {
 
     private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
 
     private final CustomerRepository customerRepository;
+    private final CustomerMapper customerMapper;
+    private final RefResolver resolver;
 
-    public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper, RefResolver resolver) {
         this.customerRepository = customerRepository;
+        this.customerMapper = customerMapper;
+        this.resolver = resolver;
     }
 
-    @Override
-    public Customer create(Customer obj) {
-        return customerRepository.save(obj);
+    public CustomerView create(CustomerCreation dto) {
+        Customer c = customerMapper.fromCreation(dto, resolver);
+        return customerMapper.toView(customerRepository.save(c));
     }
 
-    @Override
-    public List<Customer> findAll() {
-        return customerRepository.findAll();
+    public List<CustomerView> findAll() {
+        return customerRepository.findAll().stream().map(customerMapper::toView).toList();
     }
 
-    @Override
-    public Optional<Customer> getById(UUID id) {
-        return customerRepository.findById(id);
+    public CustomerView getById(UUID id) {
+        return customerMapper.toView(customerRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Customer not found: " + id)));
     }
 
-    @Override
-    public Customer update(UUID id, Customer obj) {
+    @Transactional
+    public CustomerView update(UUID id, CustomerUpdate dto) {
         Customer existing = customerRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.error("Customer not found for update. id={}", id);
-                    return new NoSuchElementException("Customer not found: " + id);
-                });
-
-        if (obj.getEmail() != null) {
-            existing.setEmail(obj.getEmail());
-        }
-
-        return customerRepository.save(existing);
+                .orElseThrow(() -> new NoSuchElementException("Customer not found: " + id));
+        customerMapper.applyUpdate(dto, existing, resolver);
+        return customerMapper.toView(existing); // transactional
     }
 
-    @Override
     public void delete(UUID id) {
         if (!customerRepository.existsById(id)) {
             log.error("Customer not found for delete. id={}", id);

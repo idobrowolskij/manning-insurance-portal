@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Table(name = "subscriptions")
-public class Subscription extends AuditingDateTime {
+public class Subscription {
 
     @EmbeddedId
     private SubscriptionId id;
@@ -36,6 +36,9 @@ public class Subscription extends AuditingDateTime {
 
     @Column(name = "paid_price", nullable = false, precision = 8, scale = 2)
     private BigDecimal paidPrice;
+
+    @Embedded
+    private TimeStamps timeStamps = new TimeStamps();
 
     public Subscription(Customer customer, Policy policy) {
         this.customer = customer;

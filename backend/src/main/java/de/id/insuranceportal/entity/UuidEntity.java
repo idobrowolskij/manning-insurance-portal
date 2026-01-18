@@ -1,6 +1,5 @@
 package de.id.insuranceportal.entity;
 
-import de.id.insuranceportal.jpa.HasUuid;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import org.hibernate.Hibernate;
@@ -10,10 +9,10 @@ import java.util.UUID;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class UuidEntity implements HasUuid {
+public abstract class UuidEntity {
 
-    @Override public abstract UUID getId();
-    @Override public abstract void setId(UUID id);
+    public abstract UUID getId();
+    public abstract void setId(UUID id);
 
     @Override
     public final boolean equals(Object o) {

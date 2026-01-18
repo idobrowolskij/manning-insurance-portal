@@ -1,6 +1,5 @@
 package de.id.insuranceportal.entity;
 
-import de.id.insuranceportal.jpa.listener.UuidListener;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,12 +14,12 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @Entity
-@EntityListeners(UuidListener.class)
 @Table(name = "policies")
 public class Policy extends UuidEntity {
 
     @Id
-    @Column(name = "policy_id", nullable = false)
+    @Column(name = "policy_id", nullable = false, updatable = false, insertable = false)
+    @GeneratedValue
     private UUID id;
 
     @Column(name = "name", nullable = false, length = 16)
@@ -41,6 +40,6 @@ public class Policy extends UuidEntity {
     private Set<Coverage> coverages = new HashSet<>();
 
     @Embedded
-    private TimeStamps auditTimeStamps = new TimeStamps();
+    private TimeStamps timeStamps = new TimeStamps();
 
 }
